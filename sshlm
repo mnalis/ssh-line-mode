@@ -4,3 +4,13 @@
 use warnings;
 use strict;
 use autodie;
+use feature 'say';
+
+use Term::ReadLine;
+my $term = Term::ReadLine->new('sshlm');
+my $prompt = 'SSH_LM: ';
+my $OUT = $term->OUT || \*STDOUT;
+while ( defined (my $line = $term->readline($prompt)) ) {
+           say $OUT "entered: $line";
+           $term->addhistory($line) if $line =~ /\S/;
+}
