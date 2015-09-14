@@ -1,9 +1,14 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl -T
 # demo: raw terminal using PTY; by Matija Nalis <mnalis-github@voyager.hr> GPLv3+, started 2015-09-14
 
+use strict;
+use warnings;
 use IO::Pty::Easy;
 use Term::ReadKey;
 use Time::HiRes qw(usleep);
+
+$ENV{'PATH'} = '/usr/local/bin:/usr/bin:/bin';
+$|=1;
 
 ReadMode 'ultra-raw';
 
@@ -37,7 +42,7 @@ while ($pty->is_active) {
         last if defined($chars) && $chars == 0;
     }
    
-    select ($r_out=$r_in, undef, $r_ex=$r_in, undef);	# infinite sleep until something comes on either on pty (output) or stdin (keyboard)
+    select ($_=$r_in, undef, $_=$r_in, undef);	# infinite sleep until something comes on either on pty (output) or stdin (keyboard)
 }
 
 $pty->close;
