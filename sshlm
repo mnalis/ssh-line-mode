@@ -8,20 +8,30 @@ use feature 'say';
 
 use Term::ReadLine;
 use IO::Handle;
+use IO::Pty::Easy;
+
 
 $ENV{'PATH'} = '/usr/local/bin:/usr/bin:/bin';
 $|=1;
 
+# see http://www.perlmonks.org/?node_id=352298
 # FIXME we should instead use IPC::Open2 (or even Expect/IO::Pty), wait for prompt from remote shell, and enable cooked mode (readline) only when it is received (and force raw mode otherwise as we're probably in editor or somewhere)
-open my $ssh_fd, '|-', 'sh';
-$ssh_fd->autoflush(1);
+#open my $ssh_fd, '|-', 'sh';
+#$ssh_fd->autoflush(1);
+my $pty = IO::Pty::Easy->new;
+$pty->spawn('/bin/sh') or die "no /bin/sh: $!";
 
 my $term = Term::ReadLine->new('sshlm');
 my $prompt = 'SSH_LM: ';
 my $OUT = $term->OUT || \*STDOUT;
-while ( defined (my $line = $term->readline($prompt)) ) {
-#           say $OUT "entered: $line";
-           say $ssh_fd $line;
-           sleep(1);	# FIXME kludge - otherwise we might execute readline (with prompt printing) before subprocess has a chance to output anything
-           $term->addhistory($line) if $line =~ /\S/;
+while ( $pty->is_active and defined (my $input = $term->readline($prompt)) ) {
+           say $OUT "entered: $input";
+           $term->addhistory($input) if $input =~ /\S/;
+
+           my $chars = $pty->write("$input\n", 0);
+           last if defined($chars) && $chars == 0;
+               my $output = $pty->read(0);
+               next if not defined $output;
+               last if defined($output) && $output eq '';
+               say "output: $output";
 }
