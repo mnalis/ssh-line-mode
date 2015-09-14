@@ -10,6 +10,11 @@ ReadMode 'ultra-raw';
 my $pty = IO::Pty::Easy->new ( raw => 0 );
 $pty->spawn("sh");
 
+# define filedescriptors on which we will wait
+my $r_in='';
+vec($r_in, fileno(STDIN), 1) = 1;
+vec($r_in, $pty->fileno, 1) = 1; 
+
 while ($pty->is_active) {
     my $output = $pty->read(0);
     if (defined $output) {
@@ -26,12 +31,9 @@ while ($pty->is_active) {
         #print $input;
         my $chars = $pty->write($input, 0);
         last if defined($chars) && $chars == 0;
-    } else {
-        usleep(10000);		# delay 1/100 sec so we don't hammer CPU
-        # FIXME: we should better use ReadKey(0.1) instead, but it does not seem to work ok.
-        # FIXME or at least do a select for 1/10sec on STDIN so we return sooner if key is pressed, and sleep longer if it is not.
-        # FIXME or should best actually always do infinite delay select on both pty output and stdin. that would provide minimum CPU usage with fastest response time; but needs using some internals
-    }
+   }
+   
+    select ($r_out=$r_in, undef, undef, undef);	# infinite sleep until something comes on either on pty (output) or stdin (keyboard)
 }
 
 $pty->close;
