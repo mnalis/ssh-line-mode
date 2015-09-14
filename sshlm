@@ -9,29 +9,62 @@ use feature 'say';
 use Term::ReadLine;
 use IO::Handle;
 use IO::Pty::Easy; # FIXME: IO::Pty::HalfDuplex seems much nicer to me, but there is no debian package, and we want to be simple to install
-
+use Term::ReadKey;
 
 $ENV{'PATH'} = '/usr/local/bin:/usr/bin:/bin';
 $|=1;
 
-# see http://www.perlmonks.org/?node_id=352298
-# FIXME we should instead use IPC::Open2 (or even Expect/IO::Pty), wait for prompt from remote shell, and enable cooked mode (readline) only when it is received (and force raw mode otherwise as we're probably in editor or somewhere)
-#open my $ssh_fd, '|-', 'sh';
-#$ssh_fd->autoflush(1);
-my $pty = IO::Pty::Easy->new;
-$pty->spawn('/bin/sh') or die "no /bin/sh: $!";
-
 my $term = Term::ReadLine->new('sshlm');
 my $prompt = 'SSH_LM: ';
 my $OUT = $term->OUT || \*STDOUT;
-while ( $pty->is_active and defined (my $input = $term->readline($prompt)) ) {
-           say $OUT "entered: $input";
-           $term->addhistory($input) if $input =~ /\S/;
+my $linemode_active = 0;
 
-           my $chars = $pty->write("$input\n", 0);
-           last if defined($chars) && $chars == 0;
-               my $output = $pty->read(0);
-               next if not defined $output;
-               last if defined($output) && $output eq '';
-               say "output: $output";
+ReadMode 'ultra-raw';
+
+my $pty = IO::Pty::Easy->new ( raw => 0 );
+$pty->spawn("sh");
+
+# define filedescriptors on which we will wait
+my $r_in='';
+vec($r_in, fileno(STDIN), 1) = 1;
+vec($r_in, $pty->fileno, 1) = 1; 
+
+
+MAIN: while ($pty->is_active) {
+    my $output = $pty->read(0);
+    if (defined $output) {
+         print $output;
+         #print "[output ends]";
+         last MAIN if defined($output) && $output eq '';
+    }
+    
+    my $all_input = '';
+    while (defined (my $input = ReadKey(-1))) {
+        if ($input eq  "\ce") {		# ctrl-e swithches linemode state
+            $linemode_active = ! $linemode_active;
+            next;	# do not store in buffer
+        }
+        $input = '[S]' if $input eq "\c]";
+        #print "[got input]";
+        #print $input;
+        $all_input .= $input;
+    }
+    while ($all_input ne '') {
+        my $chars = $pty->write($all_input, 0);
+        $all_input = '';
+        last MAIN if defined($chars) && $chars == 0;
+        
+        if ($linemode_active) {
+            $all_input = $term->readline($prompt);
+            $term->addhistory($all_input) if $all_input =~ /\S/;
+            $linemode_active = 0;
+            next;
+        }
+    }
+    
+    select ($_=$r_in, undef, $_=$r_in, undef);	# infinite sleep until something comes on either on pty (output) or stdin (keyboard)
 }
+
+$pty->close;
+ReadMode 'restore';
+print "\n[Terminal exiting]\n";
