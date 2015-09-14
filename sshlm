@@ -7,10 +7,21 @@ use autodie;
 use feature 'say';
 
 use Term::ReadLine;
+use IO::Handle;
+
+$ENV{'PATH'} = '/usr/local/bin:/usr/bin:/bin';
+$|=1;
+
+# FIXME we should instead use IPC::Open2 (or even Expect/IO::Pty), wait for prompt from remote shell, and enable cooked mode (readline) only when it is received (and force raw mode otherwise as we're probably in editor or somewhere)
+open my $ssh_fd, '|-', 'sh';
+$ssh_fd->autoflush(1);
+
 my $term = Term::ReadLine->new('sshlm');
 my $prompt = 'SSH_LM: ';
 my $OUT = $term->OUT || \*STDOUT;
 while ( defined (my $line = $term->readline($prompt)) ) {
-           say $OUT "entered: $line";
+#           say $OUT "entered: $line";
+           say $ssh_fd $line;
+           sleep(1);	# FIXME kludge - otherwise we might execute readline (with prompt printing) before subprocess has a chance to output anything
            $term->addhistory($line) if $line =~ /\S/;
 }
