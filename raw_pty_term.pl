@@ -5,7 +5,6 @@ use strict;
 use warnings;
 use IO::Pty::Easy;
 use Term::ReadKey;
-use Time::HiRes qw(usleep);
 
 $ENV{'PATH'} = '/usr/local/bin:/usr/bin:/bin';
 $|=1;
@@ -28,10 +27,9 @@ while ($pty->is_active) {
          last if defined($output) && $output eq '';
     }
     
-    
     my $all_input = '';
     while (defined (my $input = ReadKey(-1))) {
-        $input = '[E]' if $input eq "\ce";
+        $input = '[E]' if $input eq "\ce";	# just few debug input sequences (ctrl-e, ctrl-]) for demo
         $input = '[S]' if $input eq "\c]";
         #print "[got input]";
         #print $input;
