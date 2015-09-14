@@ -4,7 +4,7 @@
 use IO::Pty::Easy;
 use Term::ReadKey;
 
-ReadMode 'cbreak';
+ReadMode 'ultra-raw';
 
 my $pty = IO::Pty::Easy->new ( raw => 0 );
 $pty->spawn("sh");
