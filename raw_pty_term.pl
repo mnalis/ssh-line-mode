@@ -23,17 +23,21 @@ while ($pty->is_active) {
          last if defined($output) && $output eq '';
     }
     
-    my $input = ReadKey(-1);
-    if (defined $input) {
+    
+    my $all_input = '';
+    while (defined (my $input = ReadKey(-1))) {
         $input = '[E]' if $input eq "\ce";
         $input = '[S]' if $input eq "\c]";
         #print "[got input]";
         #print $input;
-        my $chars = $pty->write($input, 0);
+        $all_input .= $input;
+    }
+    if ($all_input ne '') {
+        my $chars = $pty->write($all_input, 0);
         last if defined($chars) && $chars == 0;
-   }
+    }
    
-    select ($r_out=$r_in, undef, undef, undef);	# infinite sleep until something comes on either on pty (output) or stdin (keyboard)
+    select ($r_out=$r_in, undef, $r_ex=$r_in, undef);	# infinite sleep until something comes on either on pty (output) or stdin (keyboard)
 }
 
 $pty->close;
