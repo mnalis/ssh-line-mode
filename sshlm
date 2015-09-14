@@ -57,7 +57,9 @@ MAIN: while ($pty->is_active) {
         }
         
         if ($linemode_active) {
+            ReadMode 'normal';	# enable local echo for readline
             $all_input = $term->readline($prompt);
+            ReadMode 'ultra-raw';
             $term->addhistory($all_input) if $all_input =~ /\S/;
             $linemode_active = 0;
             $all_input .= "\n";
