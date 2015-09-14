@@ -39,26 +39,29 @@ MAIN: while ($pty->is_active) {
     }
     
     my $all_input = '';
-    while (defined (my $input = ReadKey(-1))) {
+    READKEY: while (defined (my $input = ReadKey(-1))) {
         if ($input eq  "\ce") {		# ctrl-e swithches linemode state
             $linemode_active = ! $linemode_active;
-            next;	# do not store in buffer
+            next READKEY;		# forget hotkey (do not store in buffer)
         }
         $input = '[S]' if $input eq "\c]";
         #print "[got input]";
         #print $input;
         $all_input .= $input;
     }
-    while ($all_input ne '') {
-        my $chars = $pty->write($all_input, 0);
-        $all_input = '';
-        last MAIN if defined($chars) && $chars == 0;
+    PROCESS_KEYS: while ($all_input ne '' or $linemode_active) {
+        if ($all_input ne '') {
+            my $chars = $pty->write($all_input, 0);
+            $all_input = '';
+            last MAIN if defined($chars) && $chars == 0;
+        }
         
         if ($linemode_active) {
             $all_input = $term->readline($prompt);
             $term->addhistory($all_input) if $all_input =~ /\S/;
             $linemode_active = 0;
-            next;
+            $all_input .= "\n";
+            next PROCESS_KEYS;
         }
     }
     
