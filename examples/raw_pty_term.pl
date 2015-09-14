@@ -1,5 +1,5 @@
 #!/usr/bin/perl -T
-# demo: raw terminal using PTY; by Matija Nalis <mnalis-github@voyager.hr> GPLv3+, started 2015-09-14
+# demo: raw terminal using PTY; by Matija Nalis <mnalis-git@voyager.hr> GPLv3+, started 2015-09-14
 
 use strict;
 use warnings;

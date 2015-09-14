@@ -1,5 +1,5 @@
 #!/usr/bin/perl -T
-# SSH line-mode wrapper by Matija Nalis <mnalis-github@voyager.hr> GPLv3+, started 2015-09-14
+# SSH line-mode wrapper by Matija Nalis <mnalis-git@voyager.hr> GPLv3+, started 2015-09-14
 
 use warnings;
 use strict;
