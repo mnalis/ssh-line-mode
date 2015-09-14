@@ -20,6 +20,9 @@ while ($pty->is_active) {
     
     my $input = ReadKey(-1);
     if (defined $input) {
+        if ($input eq "\ce") {
+           $input = '[E]';	# debug - test if we can replace input based on hotkeys
+        }
         #print "[got input]";
         #print $input;
         my $chars = $pty->write($input, 0);
