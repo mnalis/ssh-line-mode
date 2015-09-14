@@ -60,8 +60,12 @@ MAIN: while ($pty->is_active) {
             ReadMode 'normal';	# enable local echo for readline
             $all_input = $term->readline($prompt);
             ReadMode 'ultra-raw';
-            $term->addhistory($all_input) if $all_input =~ /\S/;
             $linemode_active = 0;
+            if (not defined $all_input) {
+                $all_input = '';
+                next PROCESS_KEYS;
+            }
+            $term->addhistory($all_input) if $all_input =~ /\S/;
             $all_input .= "\n";
             next PROCESS_KEYS;
         }
