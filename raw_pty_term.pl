@@ -3,6 +3,7 @@
 
 use IO::Pty::Easy;
 use Term::ReadKey;
+use Time::HiRes qw(usleep);
 
 ReadMode 'ultra-raw';
 
@@ -23,9 +24,11 @@ while ($pty->is_active) {
         #print $input;
         my $chars = $pty->write($input, 0);
         last if defined($chars) && $chars == 0;
+    } else {
+        usleep(10000);		# 1/100 sec	-- FIXME: we should better use ReadKey(0.1) instead, but it does not seem to work ok.
     }
 }
 
 $pty->close;
 ReadMode 'restore';
-
+print "\n[Terminal exiting]\n";
