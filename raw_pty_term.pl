@@ -27,7 +27,10 @@ while ($pty->is_active) {
         my $chars = $pty->write($input, 0);
         last if defined($chars) && $chars == 0;
     } else {
-        usleep(10000);		# 1/100 sec	-- FIXME: we should better use ReadKey(0.1) instead, but it does not seem to work ok.
+        usleep(10000);		# delay 1/100 sec so we don't hammer CPU
+        # FIXME: we should better use ReadKey(0.1) instead, but it does not seem to work ok.
+        # FIXME or at least do a select for 1/10sec on STDIN so we return sooner if key is pressed, and sleep longer if it is not.
+        # FIXME or should best actually always do infinite delay select on both pty output and stdin. that would provide minimum CPU usage with fastest response time; but needs using some internals
     }
 }
 
