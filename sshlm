@@ -8,7 +8,7 @@ use feature 'say';
 
 use Term::ReadLine;
 use IO::Handle;
-use IO::Pty::Easy;
+use IO::Pty::Easy; # FIXME: IO::Pty::HalfDuplex seems much nicer to me, but there is no debian package, and we want to be simple to install
 
 
 $ENV{'PATH'} = '/usr/local/bin:/usr/bin:/bin';
