@@ -31,7 +31,10 @@ sub accept_line_immed() {
     $readline_accept_key = chr($key);
     return $term->redisplay();
 }
+
 $term->add_defun('sshlm-accept-line-immed', \&accept_line_immed, ord $HOTKEY);
+$term->read_init_file();	# otherwise add_defun() used in .inputrc won't be recognized
+
 sub do_readline {
     my ($prompt) = @_;
     $readline_accept_key = "\n";		# assume newline if "accept-line" called instead of "sshlm-accept-line-immed"

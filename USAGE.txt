@@ -16,9 +16,18 @@ REQUIREMENTS:
 
 BUGS:
 
-- <tab> key will not do what you want (it will do LOCAL filename completition
-  instead). This is hard to fix properly, perhaps we can just make <tab> finish 
-  the local line editing and fallback to char-by-char mode.
+- <tab> key will not do what you want (remote filename completion).
+  This is very hard (if not impossible) to do properly.
+  Instead, it will do LOCAL filename completition by default.
+
+  Alternatively, if you want <tab> to finish the local line editing,
+  fallback to char-by-char mode and send local input so far (including tab)
+  for processing to remote side, put following lines in your ~/.inputrc 
+  (quotes and all):
+
+  $if sshlm  
+  "\C-i": sshlm-accept-line-immed
+  $endif
 
 - FIXME - implement prompt auto-detection to enter line mode automatically,
   so hotkey need not be pressed every time
