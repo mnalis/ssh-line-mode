@@ -15,7 +15,6 @@ REQUIREMENTS:
 
 
 BUGS:
-
 - <tab> key will not do what you want (remote filename completion).
   This is very hard (if not impossible) to do properly.
   Instead, it will do LOCAL filename completition by default.
@@ -31,3 +30,7 @@ BUGS:
 
 - FIXME - implement prompt auto-detection to enter line mode automatically,
   so hotkey need not be pressed every time
+
+- FIXME - lines entered in local mode currently gets echoed twice (once
+  locally by readline, once by remote shell in response to receiving them).
+  Should fix that. Also "[L]" prompt should get erased.
