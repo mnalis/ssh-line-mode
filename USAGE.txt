@@ -3,8 +3,27 @@ It passes all its parameters to ssh unmodified.
 
 By default, sshlm starts in char-by-char mode so everything is the same as
 when using regular ssh. However, when you press "ctrl-]" hotkey, local line
-editing mode pops up (indicated by underlined "L"), where you can use all
+editing mode pops up (indicated by underlined "[L]"), where you can use all
 GNU Readline functionality (command recall, command line editing etc).
+
+When in local-line-editing mode, "enter" (or "ctrl-]") will send all inputed
+data to remote shell and return to char-by-char mode.
+
+
+Another option (instead of manually entering local-line-editing mode with
+hotkey, which quickly gets boring) is automatic shell prompt detection. 
+
+If your shell prompts ends in "-lm% " or "-lm# " or "-lm> " or "-lm$ "
+(see $REMOTE_PS1_RE in sshlm), then local-line-editing mode will be enabled
+automatically (until you exit it by pressing "enter" or "ctrl-]" hotkey)
+
+So, to enable, upon logging in on remote host, change your prompt with 
+(for example):
+PS1="myremotehost-lm> "
+and it should automatically detect and enable local-line-editing mode 
+(indicated by "[L]").
+
+
 
 REQUIREMENTS:
 - sshlm wrapper is written in perl, and requires several perl modules.
@@ -12,6 +31,7 @@ REQUIREMENTS:
   Modules can be installed manually from http://cpan.org/ or in Debian-based distributions by:
   "apt-get install libterm-readline-gnu-perl libio-pty-easy-perl libterm-readkey-perl"
   It also requires any command-line ssh client of your choice (like openssh-client).
+
 
 
 BUGS:
@@ -28,9 +48,6 @@ BUGS:
   "\C-i": sshlm-accept-line-immed
   $endif
 
-- FIXME - implement prompt auto-detection to enter line mode automatically,
-  so hotkey need not be pressed every time
-
 - FIXME - lines entered in local mode currently gets echoed twice (once
   locally by readline, once by remote shell in response to receiving them).
   Should fix that. Also "[L]" prompt should get erased.
@@ -38,5 +55,5 @@ BUGS:
 - FIXME - should ignore signals; currently ctrl-c and friends kill sshlm
   which we don't want.
 
-- FIXME - ctrl-d (EOF) on readline input should terminate sesion.
+- FIXME - ctrl-d (EOF) on readline input should terminate session.
   currently you need to press it twice.

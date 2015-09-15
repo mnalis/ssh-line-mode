@@ -11,9 +11,10 @@ use IO::Pty::Easy;
 use Term::ReadKey;
 
 $ENV{'PATH'} = '/usr/local/bin:/usr/bin:/bin';
-my $HOTKEY = "\c]";
-my $PROMPT = '[L] ';
-my $SSH = 'ssh';
+my $HOTKEY = "\c]";					# to trigger line-mode
+my $PROMPT = '[L] ';					# readline prompt shown in line-mode
+my $SSH = 'ssh';					# ssh client to execute (we're only wrapper for it!)
+my $REMOTE_PS1_RE = qr/-lm[%#>\$]\h*($|\e.{1,5})/i;	# regexp to match remote prompt, for auto-enter-linemode functionality
 
 #
 # no user configurable parts below
@@ -59,8 +60,10 @@ vec($r_in, $pty->fileno, 1) = 1;
 MAIN: while ($pty->is_active) {
     my $output = $pty->read(0);
     if (defined $output) {
+         $linemode_active = 1 if $output =~ /$REMOTE_PS1_RE/;
          print $output;
-         #print "[output ends]";
+         #print "[output ends a=$linemode_active] ";
+         #open LOG, '>>', '/tmp/sshlm.log'; print LOG "output=>$output<, a=$linemode_active]\n"; close LOG;
          last MAIN if defined($output) && $output eq '';
     }
     
