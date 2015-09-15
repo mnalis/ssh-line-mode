@@ -1,5 +1,3 @@
-=== This is work in progress and not functional yet as of 2015-09-14 !!! ===
-
 This is wrapper around ssh(1) which allows it to do local line editing
 before sending it to remote host (also known by names such as telnet line mode,
 line-by-line, line mode, line buffered mode, canonical mode, cooked mode,
@@ -23,8 +21,8 @@ new protocol, which should be as secure as SSH, but does not have as many
 eyeballs over it). Look it over.
 
 But, if you just want to install one program on your laptop and do not touch
-the servers at all, but still at times have some possibility of local
-readline line editing to battle the annoying network lag, this might just
+the servers at all, but still at times have some possibility of readline powered 
+local line editing to battle the annoying network lag, this might just
 help you.
 
-(or, it MIGHT help you once it is finished, which CURRENTLY IT IS NOT)
+See USAGE.txt for instructions.

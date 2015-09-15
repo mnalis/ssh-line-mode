@@ -1,0 +1,16 @@
+To use, you simply replace "ssh" command with "sshlm".
+It passes all its parameters to ssh unmodified.
+
+By default, sshlm starts in char-by-char mode so everything is the same as
+when using regular ssh. However, when you press "ctrl-]" hotkey, local line
+editing mode pops up (indicated by underlined "L"), where you can use all
+GNU Readline functionality (command recall, command line editing etc).
+
+BUGS:
+
+- <tab> key will not do what you want (it will do LOCAL filename completition
+  instead). This is hard to fix properly, perhaps we can just make <tab> finish 
+  the local line editing and fallback to char-by-char mode.
+
+- FIXME - implement prompt auto-detection to enter line mode automatically,
+  so hotkey need not be pressed every time

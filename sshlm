@@ -1,28 +1,34 @@
-#!/usr/bin/perl -T
+#!/usr/bin/perl
 # SSH line-mode wrapper by Matija Nalis <mnalis-git@voyager.hr> GPLv3+, started 2015-09-14
 
 use warnings;
 use strict;
 use autodie;
-use feature 'say';
 
 use Term::ReadLine;
 use IO::Handle;
-use IO::Pty::Easy; # FIXME: IO::Pty::HalfDuplex seems much nicer to me, but there is no debian package, and we want to be simple to install
+use IO::Pty::Easy;
 use Term::ReadKey;
 
 $ENV{'PATH'} = '/usr/local/bin:/usr/bin:/bin';
+my $HOTKEY = "\c]";
+my $PROMPT = '[L] ';
+my $SSH = 'ssh';
+
+#
+# no user configurable parts below
+#
+
 $|=1;
 
 my $term = Term::ReadLine->new('sshlm');
-my $prompt = 'SSH_LM: ';
-my $OUT = $term->OUT || \*STDOUT;
+#my $OUT = $term->OUT || \*STDOUT;
 my $linemode_active = 0;
 
 ReadMode 'ultra-raw';
 
 my $pty = IO::Pty::Easy->new ( raw => 0 );
-$pty->spawn("sh");
+$pty->spawn($SSH, @ARGV);
 
 # define filedescriptors on which we will wait
 my $r_in='';
@@ -40,11 +46,10 @@ MAIN: while ($pty->is_active) {
     
     my $all_input = '';
     READKEY: while (defined (my $input = ReadKey(-1))) {
-        if ($input eq  "\ce") {		# ctrl-e swithches linemode state
+        if ($input eq $HOTKEY) {		# hotkey swithches linemode state
             $linemode_active = ! $linemode_active;
             next READKEY;		# forget hotkey (do not store in buffer)
         }
-        $input = '[S]' if $input eq "\c]";
         #print "[got input]";
         #print $input;
         $all_input .= $input;
@@ -58,7 +63,7 @@ MAIN: while ($pty->is_active) {
         
         if ($linemode_active) {
             ReadMode 'normal';	# enable local echo for readline
-            $all_input = $term->readline($prompt);
+            $all_input = $term->readline($PROMPT);
             ReadMode 'ultra-raw';
             $linemode_active = 0;
             if (not defined $all_input) {
@@ -76,4 +81,4 @@ MAIN: while ($pty->is_active) {
 
 $pty->close;
 ReadMode 'restore';
-print "\n[Terminal exiting]\n";
+print "\n[sshlm exiting]\n";
