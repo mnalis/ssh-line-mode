@@ -22,6 +22,23 @@ my $SSH = 'ssh';
 $|=1;
 
 my $term = Term::ReadLine->new('sshlm');
+die 'Need Term::ReadLine::Gnu installed' unless $term->ReadLine eq 'Term::ReadLine::Gnu';
+
+my $readline_accept_key;
+sub accept_line_immed() {
+    my ($count, $key) = @_;
+    $term->Attribs->{done} = 1;
+    $readline_accept_key = chr($key);
+    return $term->redisplay();
+}
+$term->add_defun('sshlm-accept-line-immed', \&accept_line_immed, ord $HOTKEY);
+sub do_readline {
+    my ($prompt) = @_;
+    $readline_accept_key = "\n";		# assume newline if "accept-line" called instead of "sshlm-accept-line-immed"
+    return $term->readline($prompt);
+}
+        
+
 #my $OUT = $term->OUT || \*STDOUT;
 my $linemode_active = 0;
 
@@ -46,7 +63,7 @@ MAIN: while ($pty->is_active) {
     
     my $all_input = '';
     READKEY: while (defined (my $input = ReadKey(-1))) {
-        if ($input eq $HOTKEY) {		# hotkey swithches linemode state
+        if ($input eq $HOTKEY) {	# hotkey activates line-mode
             $linemode_active = ! $linemode_active;
             next READKEY;		# forget hotkey (do not store in buffer)
         }
@@ -63,15 +80,15 @@ MAIN: while ($pty->is_active) {
         
         if ($linemode_active) {
             ReadMode 'normal';	# enable local echo for readline
-            $all_input = $term->readline($PROMPT);
+            $all_input = do_readline($PROMPT);
             ReadMode 'ultra-raw';
-            $linemode_active = 0;
+            $linemode_active = 0;	# turn off linemode once it was used
             if (not defined $all_input) {
                 $all_input = '';
                 next PROCESS_KEYS;
             }
             $term->addhistory($all_input) if $all_input =~ /\S/;
-            $all_input .= "\n";
+            $all_input .= $readline_accept_key if $readline_accept_key ne $HOTKEY;	# add enter or tab to buffer, but not hotkey
             next PROCESS_KEYS;
         }
     }
