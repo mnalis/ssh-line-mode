@@ -6,6 +6,14 @@ when using regular ssh. However, when you press "ctrl-]" hotkey, local line
 editing mode pops up (indicated by underlined "L"), where you can use all
 GNU Readline functionality (command recall, command line editing etc).
 
+REQUIREMENTS:
+- sshlm wrapper is written in perl, and requires several perl modules.
+  (Term::ReadLine IO::Pty::Easy Term::ReadKey)
+  Modules can be installed manually from http://cpan.org/ or in Debian-based distributions by:
+  "apt-get install libterm-readline-gnu-perl libio-pty-easy-perl libterm-readkey-perl"
+  It also requires any command-line ssh client of your choice (like openssh-client).
+
+
 BUGS:
 
 - <tab> key will not do what you want (it will do LOCAL filename completition

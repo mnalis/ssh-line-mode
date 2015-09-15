@@ -21,8 +21,8 @@ new protocol, which should be as secure as SSH, but does not have as many
 eyeballs over it). Look it over.
 
 But, if you just want to install one program on your laptop and do not touch
-the servers at all, but still at times have some possibility of readline powered 
-local line editing to battle the annoying network lag, this might just
-help you.
+the servers at all, but still at times have some possibility of GNU readline 
+(http://www.gnu.org/software/readline/) powered local line editing to battle 
+the annoying network lag, this might just help you.
 
 See USAGE.txt for instructions.
