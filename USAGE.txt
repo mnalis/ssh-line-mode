@@ -10,8 +10,9 @@ When in local-line-editing mode, "enter" (or "ctrl-]") will send all inputed
 data to remote shell and return to char-by-char mode.
 
 
-Another option (instead of manually entering local-line-editing mode with
-hotkey, which quickly gets boring) is automatic shell prompt detection. 
+Another option (instead of manually entering local-line-editing mode all the
+time with hotkey, which quickly gets boring) is automatic shell prompt
+detection.
 
 If your shell prompts ends in "-lm% " or "-lm# " or "-lm> " or "-lm$ "
 (see $REMOTE_PS1_RE in sshlm), then local-line-editing mode will be enabled
