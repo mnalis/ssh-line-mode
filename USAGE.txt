@@ -34,3 +34,9 @@ BUGS:
 - FIXME - lines entered in local mode currently gets echoed twice (once
   locally by readline, once by remote shell in response to receiving them).
   Should fix that. Also "[L]" prompt should get erased.
+
+- FIXME - should ignore signals; currently ctrl-c and friends kill sshlm
+  which we don't want.
+
+- FIXME - ctrl-d (EOF) on readline input should terminate sesion.
+  currently you need to press it twice.
