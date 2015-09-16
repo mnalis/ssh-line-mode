@@ -1,0 +1,9 @@
+- readline input which spans multiple lines could be only partially
+  erased correctly before being re-echoed by remote shell, leading to
+  duplicate text.
+
+- should ignore signals; currently ctrl-c and friends can kill sshlm
+  which we don't want. See also controlling tty and session leaders.
+
+- make a Debian package on "make deb"
+  (and run lintian on it)

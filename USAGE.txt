@@ -54,9 +54,4 @@ BUGS:
   "\C-i": sshlm-accept-line-immed
   $endif
 
-- FIXME - readline input which spans multiple lines could be only partially
-  erased correctly before being re-echoed by remote shell, leading to
-  duplicate text.
-
-- FIXME - should ignore signals; currently ctrl-c and friends can kill sshlm
-  which we don't want.
+- see BUGS.txt for other known anomalies (to be fixed hopefully)
