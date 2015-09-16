@@ -7,3 +7,8 @@
 
 - make a Debian package on "make deb"
   (and run lintian on it)
+
+- readline *really* wants it prompt to start at the beginning of the line.
+  it it doesn't, sometimes it will move it there overwriting remote prompt
+  etc. So we should probably make it work that way, and the use readline
+  functions to erase local echo.
