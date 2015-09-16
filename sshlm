@@ -26,19 +26,12 @@ my $term = Term::ReadLine->new('sshlm');
 die 'Need Term::ReadLine::Gnu installed' unless $term->ReadLine eq 'Term::ReadLine::Gnu';
 
 my $readline_accept_key;
+my $undo_local = 0;
 sub accept_line_immed() {
     my ($count, $key) = @_;
 
     $readline_accept_key = chr($key);
     $term->Attribs->{done} = 1;
-
-    my $p_len = length $PROMPT;	# set to 0 instead of length($PROMPT) to leave local readline prompt intact
-
-    # we remove all the locally outputed text (including readline [L] prompt) 
-    # so when we send it to remote shell and it echos it back to us, we avoid duplicate text.
-    print "\b" x ($p_len + $term->Attribs->{point});
-    print " "  x ($p_len + $term->Attribs->{end});
-    print "\b" x ($p_len + $term->Attribs->{end});
     return;
 }
 
@@ -51,6 +44,7 @@ $term->read_init_file();	# otherwise add_defun() used in .inputrc won't be recog
 sub do_readline {
     my ($prompt) = @_;
     $readline_accept_key = "\n";		# assume newline if "accept-line" called instead of "sshlm-accept-line-immed"
+    $undo_local = 1;
     return $term->readline($prompt);
 }
         
@@ -72,11 +66,21 @@ vec($r_in, $pty->fileno, 1) = 1;
 MAIN: while ($pty->is_active) {
     my $output = $pty->read(0);
     if (defined $output) {
-         $linemode_active = 1 if defined $REMOTE_PS1_RE and $output =~ /$REMOTE_PS1_RE/;
-         print $output;
-         #print "[output ends a=$linemode_active] ";
-         #open LOG, '>>', '/tmp/sshlm.log'; print LOG "output=>$output<, a=$linemode_active]\n"; close LOG;
-         last MAIN if defined($output) && $output eq '';
+        if ($undo_local) {		# if this is first output after we've finished readline
+            # we erase from screen all the locally outputed text (including readline [L] prompt) 
+            # as we're about to get copy which remote shell echos back to us (to avoid duplicate text)
+            my $p_len = length $PROMPT;	# set to 0 instead of length($PROMPT) to leave local readline prompt intact
+            print "\b" x ($p_len + $term->Attribs->{point});
+            print " "  x ($p_len + $term->Attribs->{end});
+            print "\b" x ($p_len + $term->Attribs->{end});
+            $undo_local = 0;
+        }
+
+        $linemode_active = 1 if defined $REMOTE_PS1_RE and $output =~ /$REMOTE_PS1_RE/;
+        print $output;
+        #print "[output ends a=$linemode_active] ";
+        #open LOG, '>>', '/tmp/sshlm.log'; print LOG "output=>$output<, a=$linemode_active]\n"; close LOG;
+        last MAIN if defined($output) && $output eq '';
     }
     
     my $all_input = '';
