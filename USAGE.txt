@@ -24,6 +24,9 @@ PS1="myremotehost-lm> "
 and it should automatically detect and enable local-line-editing mode 
 (indicated by "[L]").
 
+If you want to remove non-ASCII underline (ornamets) around "[L]" prompt,
+execute this in your shell:
+PERL_RL="Gnu o=0"; export PERL_RL
 
 
 REQUIREMENTS:
@@ -49,11 +52,7 @@ BUGS:
   "\C-i": sshlm-accept-line-immed
   $endif
 
-- FIXME - lines entered in local mode currently gets echoed twice (once
-  locally by readline, once by remote shell in response to receiving them).
-  Should fix that. Also "[L]" prompt should get erased.
-
-- FIXME - should ignore signals; currently ctrl-c and friends kill sshlm
+- FIXME - should ignore signals; currently ctrl-c and friends can kill sshlm
   which we don't want.
 
 - FIXME - ctrl-d (EOF) on readline input should terminate session.
