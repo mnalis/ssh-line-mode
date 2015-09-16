@@ -12,3 +12,5 @@
   it it doesn't, sometimes it will move it there overwriting remote prompt
   etc. So we should probably make it work that way, and the use readline
   functions to erase local echo.
+  for example http://stackoverflow.com/questions/15398742/how-can-i-suppress-readline-to-print-something-and-then-restore-it
+  http://stackoverflow.com/questions/1512028/gnu-readline-how-to-clear-the-input-line
