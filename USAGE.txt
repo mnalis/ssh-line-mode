@@ -52,8 +52,9 @@ BUGS:
   "\C-i": sshlm-accept-line-immed
   $endif
 
+- FIXME - readline input which spans multiple lines could be only partially
+  erased correctly before being re-echoed by remote shell, leading to
+  duplicate text.
+
 - FIXME - should ignore signals; currently ctrl-c and friends can kill sshlm
   which we don't want.
-
-- FIXME - ctrl-d (EOF) on readline input should terminate session.
-  currently you need to press it twice.

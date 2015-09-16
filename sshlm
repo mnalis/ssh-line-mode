@@ -101,9 +101,8 @@ MAIN: while ($pty->is_active) {
             $all_input = do_readline($PROMPT);
             ReadMode 'ultra-raw';
             $linemode_active = 0;	# turn off linemode once it was used
-            if (not defined $all_input) {
-                $all_input = '';
-                next PROCESS_KEYS;
+            if (not defined $all_input) {	# EOF in readline
+                last MAIN;
             }
             $term->addhistory($all_input) if $all_input =~ /\S/;
             $all_input .= $readline_accept_key if $readline_accept_key ne $HOTKEY;	# add enter or tab to buffer, but not hotkey
