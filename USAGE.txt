@@ -36,6 +36,8 @@ REQUIREMENTS:
   "apt-get install libterm-readline-gnu-perl libio-pty-easy-perl libterm-readkey-perl"
   It also requires any command-line ssh client of your choice (like openssh-client).
 
+INSTALLATION:
+- "sudo make install"
 
 
 BUGS:
