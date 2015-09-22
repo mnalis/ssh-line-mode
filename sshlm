@@ -53,6 +53,7 @@ sub undo_readline {
     print "\b" x ($back);
     print " "  x ($erase);
     print "\b" x ($erase);
+    $undo_local = 0;
 }
 
 #my $OUT = $term->OUT || \*STDOUT;
@@ -77,7 +78,6 @@ MAIN: while ($pty->is_active) {
             # as we're about to get copy which remote shell echos back to us (to avoid duplicate text)
             my $p_len = length $PROMPT;	# set to 0 instead of length($PROMPT) to leave local readline prompt intact
             undo_readline ($p_len + $term->Attribs->{point}, $p_len + $term->Attribs->{end});
-            $undo_local = 0;
         }
 
         $linemode_active = 1 if defined $REMOTE_PS1_RE and $output =~ /$REMOTE_PS1_RE/;
@@ -114,7 +114,14 @@ MAIN: while ($pty->is_active) {
                 next PROCESS_KEYS;
             }
             $term->addhistory($all_input) if $all_input =~ /\S/;	# do not put terminating char in history (newline, tab, hotkey, etc.)
-            $all_input .= $readline_accept_key if $readline_accept_key ne $HOTKEY;	# add enter or tab to buffer, but not hotkey
+            if ($readline_accept_key eq $HOTKEY) {
+                if ($all_input eq '') {		# hotkey pressed as only char in readline: undo "[L]" prompt immedeately (as remote shell won't get anything it also won't output anything nor execute undo_readline()
+                    my $p_len = length $PROMPT;
+                    undo_readline ($p_len, $p_len);
+                }
+            } else {
+                $all_input .= $readline_accept_key;	# add enter or tab to buffer, but not hotkey
+            }
             next PROCESS_KEYS;
         }
     }
