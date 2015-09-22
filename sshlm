@@ -25,6 +25,10 @@ $|=1;
 my $term = Term::ReadLine->new('sshlm');
 die 'Need Term::ReadLine::Gnu installed' unless $term->ReadLine eq 'Term::ReadLine::Gnu';
 
+# while in readline, disable local handling of ctrl-C, ctrl-\ and ctrl-Z
+my %old_STTY = GetControlChars();
+SetControlChars (INTERRUPT => '',  QUIT => '', SUSPEND => '');
+
 my $readline_accept_key;
 my $undo_local = 0;
 sub accept_line_immed() {
@@ -131,4 +135,5 @@ MAIN: while ($pty->is_active) {
 
 $pty->close;
 ReadMode 'restore';
+SetControlChars (%old_STTY);
 print "\n[sshlm exiting]\n";

@@ -2,14 +2,11 @@
   erased correctly before being re-echoed by remote shell, leading to
   duplicate text.
 
-- should ignore signals; currently ctrl-c and friends can kill sshlm
-  which we don't want. See also controlling tty and session leaders.
-
 - make a Debian package on "make deb"
   (and run lintian on it)
 
-- readline *really* wants it prompt to start at the beginning of the line.
-  it it doesn't, sometimes it will move it there overwriting remote prompt
+- readline *really* wants its prompt to start at the beginning of the line.
+  if it doesn't, sometimes it will move it there overwriting remote prompt
   etc. So we should probably make it work that way, and the use readline
   functions to erase local echo.
   for example http://stackoverflow.com/questions/15398742/how-can-i-suppress-readline-to-print-something-and-then-restore-it
