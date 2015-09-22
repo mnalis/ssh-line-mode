@@ -14,3 +14,9 @@
   functions to erase local echo.
   for example http://stackoverflow.com/questions/15398742/how-can-i-suppress-readline-to-print-something-and-then-restore-it
   http://stackoverflow.com/questions/1512028/gnu-readline-how-to-clear-the-input-line
+
+- ctrl-d on redline should propagate ctrl-d to shell, as we do not always
+  want to terminate remote shell (for example, when there is screen(1) on
+  another side, we just want to close that one window.
+
+- when terminated on <TAB>, do not put literal <TAB> in history
