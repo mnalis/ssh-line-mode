@@ -3,8 +3,11 @@
   duplicate text.
 
 - make a Debian package on "make deb"
-  (and run lintian on it)
   - depends on openssh-client (or others?), perl, perl modules (will it autodetect?)
+  - compress docs
+  - include actual binary in there!
+  - run lintian on it
+  - run piuparts on it
 
 - readline *really* wants its prompt to start at the beginning of the line.
   if it doesn't, sometimes it will move it there overwriting remote prompt

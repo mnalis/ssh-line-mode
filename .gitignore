@@ -1,1 +1,5 @@
 *~
+debian/files
+debian/sshlm.debhelper.log
+debian/sshlm.substvars
+debian/sshlm/
