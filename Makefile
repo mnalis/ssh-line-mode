@@ -1,15 +1,20 @@
-DESTDIR=/usr/local
-BINDIR=${DESTDIR}/bin
+prefix = /usr/local
+bindir = $(prefix)/bin
+sharedir = $(prefix)/share
+mandir = $(sharedir)/man
+man1dir = $(mandir)/man1
 
 all:
 	@echo 'use "make install" to install, or "make deb" to build debian package'
 	
 install:
-	test -d ${BINDIR} || mkdir -p ${BINDIR}
-	install -o root -g root -m 0755 sshlm ${BINDIR}/sshlm
+	test -d  ${DESTDIR}${bindir} || mkdir -p ${DESTDIR}${bindir}
+	install sshlm ${DESTDIR}${bindir}/
+	test -d  ${DESTDIR}${man1dir} || mkdir -p ${DESTDIR}${man1dir}
+	install -m 0644 sshlm.1 $(DESTDIR)$(man1dir)/
 
 uninstall:
-	rm -f ${BINDIR}/sshlm
+	rm -f ${DESTDIR}${bindir}/sshlm $(DESTDIR)$(man1dir)/sshlm.1
 	
 clean:
 	rm -f *~
