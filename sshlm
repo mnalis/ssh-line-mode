@@ -24,13 +24,7 @@ $|=1;
 
 my $term = Term::ReadLine->new('sshlm');
 die 'Need Term::ReadLine::Gnu installed' unless $term->ReadLine eq 'Term::ReadLine::Gnu';
-$term->Attribs->{catch_signals} = 0;
-$term->clear_signals();
 
-# while in readline, disable local handling of ctrl-C, ctrl-\ and ctrl-Z
-$SIG{INT} = 'IGNORE';
-$SIG{QUIT} = 'IGNORE';
-$SIG{TSTP} = 'IGNORE';
 
 my $readline_accept_key;
 my $undo_local = 0;
@@ -50,6 +44,10 @@ $term->read_init_file();	# otherwise add_defun() used in .inputrc won't be recog
 
 sub do_readline {
     my ($prompt) = @_;
+    # while in readline, disable local handling of ctrl-C, ctrl-\ and ctrl-Z
+    local $SIG{INT} = 'IGNORE';
+    local $SIG{QUIT} = 'IGNORE';
+    #local $SIG{TSTP} = 'IGNORE';
     $readline_accept_key = "\n";		# assume newline if "accept-line" called instead of "sshlm-accept-line-immed"
     $undo_local = 1;
     return $term->readline($prompt);
