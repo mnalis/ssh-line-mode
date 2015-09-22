@@ -40,7 +40,7 @@ INSTALLATION:
 - "sudo make install"
 
 
-BUGS:
+BUGS & WORKAROUNDS:
 - <tab> key will not do what you want (remote filename completion).
   This is very hard (if not impossible) to do properly.
   Instead, it will do LOCAL filename completition by default.

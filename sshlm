@@ -38,7 +38,7 @@ sub accept_line_immed() {
 $term->add_defun('sshlm-accept-line-immed', \&accept_line_immed, ord $HOTKEY);
 $term->parse_and_bind('"\C-j": sshlm-accept-line-immed');
 $term->parse_and_bind('"\C-m": sshlm-accept-line-immed');
-$term->addhistory('PS1=`echo $PS1 | sed -e "s/%#/-lm%#/"`');	# fake history for easy adding PS1
+$term->addhistory(q{PS1='ssh-lm> '; _S=${0##*/}; _S=${_S#-*} ; echo Setting ssh-lm prompt for shell $_S; [ "$_S" = "zsh" ] && PS1='%m-lm%# '; [ "$_S" = "bash" ] && PS1='\h-lm\$ '});	# fake history for easy adding PS1
 $term->read_init_file();	# otherwise add_defun() used in .inputrc won't be recognized
 
 sub do_readline {
@@ -108,7 +108,7 @@ MAIN: while ($pty->is_active) {
             if (not defined $all_input) {	# EOF in readline
                 last MAIN;
             }
-            $term->addhistory($all_input) if $all_input =~ /\S/;
+            $term->addhistory($all_input) if $all_input =~ /\S/;	# do not put terminating char in history (newline, tab, hotkey, etc.)
             $all_input .= $readline_accept_key if $readline_accept_key ne $HOTKEY;	# add enter or tab to buffer, but not hotkey
             next PROCESS_KEYS;
         }

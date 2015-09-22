@@ -18,8 +18,8 @@ those issues and more, but it requires installing additional programs on
 remote sides, fixing UTF-8 issues both on remote and local sides, and
 configuring remote firewalls to pass additional traffic (it also introduces
 new protocol, which should be as secure as SSH, but does not have as many
-eyeballs over it).  And it provides predictive local echo instead of local
-line editing. You might want to look it over anyway.
+eyeballs over it).  And it provides predictive local echo instead of full
+local line editing. You might want to look it over anyway.
 
 But, if you just want to install one program on your laptop and do not touch
 the servers at all, but still at times have some possibility of GNU readline 

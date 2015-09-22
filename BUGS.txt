@@ -18,5 +18,3 @@
 - ctrl-d on redline should propagate ctrl-d to shell, as we do not always
   want to terminate remote shell (for example, when there is screen(1) on
   another side, we just want to close that one window.
-
-- when terminated on <TAB>, do not put literal <TAB> in history
