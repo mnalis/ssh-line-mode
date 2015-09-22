@@ -11,5 +11,3 @@
   functions to erase local echo.
   for example http://stackoverflow.com/questions/15398742/how-can-i-suppress-readline-to-print-something-and-then-restore-it
   http://stackoverflow.com/questions/1512028/gnu-readline-how-to-clear-the-input-line
-
-- if line entered is the same as line already last in history, do not re-add it

@@ -39,6 +39,7 @@ $term->add_defun('sshlm-accept-line-immed', \&accept_line_immed, ord $HOTKEY);
 $term->parse_and_bind('"\C-c": sshlm-accept-line-immed');
 $term->parse_and_bind('"\C-j": sshlm-accept-line-immed');
 $term->parse_and_bind('"\C-m": sshlm-accept-line-immed');
+$term->MinLine(undef);		# disable autohistory
 $term->addhistory(q{PS1='ssh-lm> '; _S=${0##*/}; _S=${_S#-*} ; echo Setting ssh-lm prompt for shell $_S; [ "$_S" = "zsh" ] && PS1='%m-lm%# '; [ "$_S" = "bash" ] && PS1='\h-lm\$ '; export PS1});	# fake history for easy adding PS1
 $term->read_init_file();	# otherwise add_defun() used in .inputrc won't be recognized
 
@@ -63,6 +64,7 @@ sub undo_readline {
 
 #my $OUT = $term->OUT || \*STDOUT;
 my $linemode_active = 0;
+my $last_history_added = '';  
 
 ReadMode 'ultra-raw';
 
@@ -113,12 +115,15 @@ MAIN: while ($pty->is_active) {
             ReadMode 'normal';	# enable local echo for readline
             $all_input = do_readline($PROMPT);
             ReadMode 'ultra-raw';
-            $linemode_active = 0;	# turn off linemode once it was used
+            $linemode_active = 0;		# turn off linemode once it was used
             if (not defined $all_input) {	# EOF in readline
                 $all_input = "\cd";		# send ctrl-d to remote side (hoping it *is* EOF char there)
                 next PROCESS_KEYS;
             }
-            $term->addhistory($all_input) if $all_input =~ /\S/;	# do not put terminating char in history (newline, tab, hotkey, etc.)
+            if ($all_input =~ /\S/ and $all_input ne $last_history_added) {		# only add non-empty lines, and avoid duplicate lines
+                $term->addhistory($all_input);	# do not put terminating char in history (newline, tab, hotkey, etc.)
+                $last_history_added = $all_input;
+            }
             if ($readline_accept_key eq $HOTKEY) {
                 if ($all_input eq '') {		# hotkey pressed as only char in readline: undo "[L]" prompt immedeately (as remote shell won't get anything it also won't output anything nor execute undo_readline()
                     my $p_len = length $PROMPT;
