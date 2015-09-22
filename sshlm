@@ -24,22 +24,25 @@ $|=1;
 
 my $term = Term::ReadLine->new('sshlm');
 die 'Need Term::ReadLine::Gnu installed' unless $term->ReadLine eq 'Term::ReadLine::Gnu';
+$term->Attribs->{catch_signals} = 0;
+$term->clear_signals();
 
 # while in readline, disable local handling of ctrl-C, ctrl-\ and ctrl-Z
-my %old_STTY = GetControlChars();
-SetControlChars (INTERRUPT => '',  QUIT => '', SUSPEND => '');
+$SIG{INT} = 'IGNORE';
+$SIG{QUIT} = 'IGNORE';
+$SIG{TSTP} = 'IGNORE';
 
 my $readline_accept_key;
 my $undo_local = 0;
 sub accept_line_immed() {
     my ($count, $key) = @_;
-
     $readline_accept_key = chr($key);
     $term->Attribs->{done} = 1;
     return;
 }
 
 $term->add_defun('sshlm-accept-line-immed', \&accept_line_immed, ord $HOTKEY);
+$term->parse_and_bind('"\C-c": sshlm-accept-line-immed');
 $term->parse_and_bind('"\C-j": sshlm-accept-line-immed');
 $term->parse_and_bind('"\C-m": sshlm-accept-line-immed');
 $term->addhistory(q{PS1='ssh-lm> '; _S=${0##*/}; _S=${_S#-*} ; echo Setting ssh-lm prompt for shell $_S; [ "$_S" = "zsh" ] && PS1='%m-lm%# '; [ "$_S" = "bash" ] && PS1='\h-lm\$ '; export PS1});	# fake history for easy adding PS1
@@ -135,5 +138,4 @@ MAIN: while ($pty->is_active) {
 
 $pty->close;
 ReadMode 'restore';
-SetControlChars (%old_STTY);
 print "\n[sshlm exiting]\n";
