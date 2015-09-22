@@ -4,6 +4,7 @@
 
 - make a Debian package on "make deb"
   (and run lintian on it)
+  - depends on openssh-client (or others?), perl, perl modules (will it autodetect?)
 
 - readline *really* wants its prompt to start at the beginning of the line.
   if it doesn't, sometimes it will move it there overwriting remote prompt

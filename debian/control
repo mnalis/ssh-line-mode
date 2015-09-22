@@ -1,0 +1,20 @@
+Source: sshlm
+Section: net
+Priority: extra
+Maintainer: Matija Nalis <mnalis-debian@voyager.hr>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.3
+Homepage: https://github.com/mnalis/ssh-line-mode
+Vcs-browser: https://github.com/mnalis/ssh-line-mode.git
+
+Package: sshlm
+Architecture: all
+Depends: ${perl:Depends}, ${misc:Depends}, openssh-client | ssh-client
+Description: line-by-line mode for ssh client
+ This is wrapper around ssh(1) which allows it to do local line editing
+ before sending it to remote host (also known by names such as telnet line mode,
+ line-by-line, line mode, line buffered mode, canonical mode, cooked mode,
+ RFC 1184).
+ It is inspired by line-by-line editing mode in telnet(1) of old.
+ Intended for use in high latency environments (especially when mixed 
+ with packet loss and/or low-bandwidth)

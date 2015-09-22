@@ -1,0 +1,6 @@
+sshlm (0.1) unstable; urgency=low
+
+  * Initial release.
+  * because of: http://serverfault.com/questions/721015/ssh-line-by-line-mode
+
+ -- Matija Nalis <mnalis-debian@voyager.hr>  Tue, 22 Sep 2015 21:26:09 +0200

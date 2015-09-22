@@ -1,0 +1,49 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.\" (C) Copyright 2015 Matija Nalis <mnalis-debian@voyager.hr>,
+.\"
+.\" First parameter, NAME, should be all caps
+.\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
+.\" other parameters are allowed: see man(7), man(1)
+.TH SSHLM 1 "September 22, 2015"
+.\" Please adjust this date whenever revising the manpage.
+.\"
+.\" Some roff macros, for reference:
+.\" .nh        disable hyphenation
+.\" .hy        enable hyphenation
+.\" .ad l      left justify
+.\" .ad b      justify to both left and right margins
+.\" .nf        disable filling
+.\" .fi        enable filling
+.\" .br        insert line break
+.\" .sp <n>    insert n+1 empty lines
+.\" for manpage-specific macros, see man(7)
+.SH NAME
+sshlm \- line-by-line mode for ssh client
+.SH SYNOPSIS
+.B sshlm
+.RI [ options ] " hostname"
+.SH DESCRIPTION
+.B sshlm
+is a wrapper that calls your standard
+.BR ssh (1) 
+and transfers control to it.
+.br
+If you press
+.B ctrl-]
+hotkey however, you will be transfered to local line-editing-mode instead of default char-by-char mode.
+.br
+The local line editing mode can also be acticated automatically by specially crafted
+.B PS1
+shell prompt on remote host. See
+.B USAGE.txt 
+for more information.
+
+.SH OPTIONS
+It does not have any of its own options, instead it passes whole command line to
+.BR ssh (1) 
+
+.SH SEE ALSO
+.BR ssh (1)
+.PP
+The rest of documentation is in 
+.B /usr/share/doc/sshlm/
