@@ -48,6 +48,12 @@ sub do_readline {
     return $term->readline($prompt);
 }
         
+sub undo_readline {
+    my ($back, $erase) = @_;
+    print "\b" x ($back);
+    print " "  x ($erase);
+    print "\b" x ($erase);
+}
 
 #my $OUT = $term->OUT || \*STDOUT;
 my $linemode_active = 0;
@@ -70,9 +76,7 @@ MAIN: while ($pty->is_active) {
             # we erase from screen all the locally outputed text (including readline [L] prompt) 
             # as we're about to get copy which remote shell echos back to us (to avoid duplicate text)
             my $p_len = length $PROMPT;	# set to 0 instead of length($PROMPT) to leave local readline prompt intact
-            print "\b" x ($p_len + $term->Attribs->{point});
-            print " "  x ($p_len + $term->Attribs->{end});
-            print "\b" x ($p_len + $term->Attribs->{end});
+            undo_readline ($p_len + $term->Attribs->{point}, $p_len + $term->Attribs->{end});
             $undo_local = 0;
         }
 
