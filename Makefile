@@ -17,7 +17,7 @@ uninstall:
 	rm -f ${DESTDIR}${bindir}/sshlm $(DESTDIR)$(man1dir)/sshlm.1
 	
 clean:
-	rm -f *~
+	rm -f *~ *.bak
 
 deb:
 	debuild -uc -us

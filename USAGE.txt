@@ -37,7 +37,7 @@ REQUIREMENTS:
   It also requires any command-line ssh client of your choice (like openssh-client).
 
 INSTALLATION:
-- "sudo make install" (or "make deb" to build debian package)
+- "sudo make install" (or "make deb" to build Debian package)
 
 
 BUGS & WORKAROUNDS:
@@ -54,4 +54,4 @@ BUGS & WORKAROUNDS:
   "\C-i": sshlm-accept-line-immed
   $endif
 
-- see BUGS.txt for other known anomalies (to be fixed hopefully)
+- see BUGS.txt for other known anomalies and improvement ideas (to be fixed someday hopefully)

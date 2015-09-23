@@ -1,3 +1,5 @@
+# save this file as your ~/.inputrc if you want non-local TAB handling (slow)
+
 $if sshlm
 # this will make <TAB> work on remote files (by dropping to char-by-char mode)
 "\C-i": sshlm-accept-line-immed
