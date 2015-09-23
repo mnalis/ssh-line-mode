@@ -8,6 +8,7 @@
   - include actual binary in there!
   - run lintian on it
   - run piuparts on it
+  - debuild -us -uc umjesto dpkg-buildpackage?
 
 - readline *really* wants its prompt to start at the beginning of the line.
   if it doesn't, sometimes it will move it there overwriting remote prompt

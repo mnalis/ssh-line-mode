@@ -9,9 +9,9 @@ all:
 	
 install:
 	test -d  ${DESTDIR}${bindir} || mkdir -p ${DESTDIR}${bindir}
-	install sshlm ${DESTDIR}${bindir}/
+	install sshlm ${DESTDIR}${bindir}/sshlm
 	test -d  ${DESTDIR}${man1dir} || mkdir -p ${DESTDIR}${man1dir}
-	install -m 0644 sshlm.1 $(DESTDIR)$(man1dir)/
+	install -m 0644 sshlm.1 $(DESTDIR)$(man1dir)/sshlm.1
 
 uninstall:
 	rm -f ${DESTDIR}${bindir}/sshlm $(DESTDIR)$(man1dir)/sshlm.1
