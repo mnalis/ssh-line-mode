@@ -13,4 +13,4 @@
 	dh $@ 
 
 override_dh_auto_install:
-        $(MAKE) DESTDIR=$$(pwd)/debian/sshlm prefix=/usr install
+	dh_auto_install -- prefix=/usr

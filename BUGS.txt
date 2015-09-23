@@ -4,9 +4,7 @@
 
 - make a Debian package on "make deb"
   - depends on openssh-client (or others?), perl, perl modules (will it autodetect?)
-  - compress docs
-  - include actual binary in there!
-  - run lintian on it
+  + run lintian on it
   - run piuparts on it
   - debuild -us -uc umjesto dpkg-buildpackage?
 
