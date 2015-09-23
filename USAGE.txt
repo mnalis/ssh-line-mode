@@ -6,7 +6,7 @@ when using regular ssh. However, when you press "ctrl-]" hotkey, local line
 editing mode pops up (indicated by underlined "[L]"), where you can use all
 GNU Readline functionality (command recall, command line editing etc).
 
-When in local-line-editing mode, "enter" (or "ctrl-]") will send all inputed
+When in local-line-editing mode, "enter" (or "ctrl-]") will send all inputted
 data to remote shell and return to char-by-char mode.
 
 
@@ -24,7 +24,12 @@ PS1="myremotehost-lm> "
 and it should automatically detect and enable local-line-editing mode 
 (indicated by "[L]").
 
-If you want to remove non-ASCII underline (ornamets) around "[L]" prompt,
+If you set your local environment variable SSHLM_AUTO=1 before running
+sshlm (like "SSHLM_AUTO=1; export SSHLM_AUTO"), sshlm will try to autodetect
+ANY remote prompt upon connection, and setup new PS1 automatically, so you
+are immediately put in local line mode when you connect to remote host.
+
+If you want to remove non-ASCII underline (ornaments) around "[L]" prompt,
 execute this in your shell:
 PERL_RL="Gnu o=0"; export PERL_RL
 
@@ -43,7 +48,7 @@ INSTALLATION:
 BUGS & WORKAROUNDS:
 - <tab> key will not do what you want (remote filename completion).
   This is very hard (if not impossible) to do properly.
-  Instead, it will do LOCAL filename completition by default.
+  Instead, it will do LOCAL filename completion by default.
 
   Alternatively, if you want <tab> to finish the local line editing,
   fallback to char-by-char mode and send local input so far (including tab)

@@ -14,14 +14,16 @@ $ENV{'PATH'} = '/usr/local/bin:/usr/bin:/bin';
 my $HOTKEY = "\c]";					# to trigger line-mode
 my $PROMPT = '[L] ';					# readline prompt shown in line-mode
 my $SSH = 'ssh';					# ssh client to execute (we're only wrapper for it!)
-my $REMOTE_PS1_RE = qr/-lm[%#>\$]\h*($|\e.{1,5})/i;	# regexp to match remote prompt, for auto-enter-linemode functionality
+my $REMOTE_PS1_RE = qr/-lm[%#>\$]\h*($|\e.{1,5})/i;	# regexp to match remote prompt, for auto-enter-linemode functionality (NEW_PS1 must set prompt to be matched by this)
+my $NEW_PS1 = q{PS1='ssh-lm> '; _S=${0##*/}; _S=${_S#-*} ; echo Setting ssh-lm prompt for shell $_S; [ "$_S" = "zsh" ] && PS1='%m-lm%# '; [ "$_S" = "bash" ] && PS1='\h-lm\$ '; export PS1};	# command to execute on remote to force new PS1 prompt
+my $AUTO_PS1_RE = qr/[%#>\$]\h{0,2}(\e.{1,5})?\h?$/i;	# if ENV{SSHLM_AUTO} is defined, use this regexp to detect remote command line, and force NEW_PS1 automatically
 
 #
 # no user configurable parts below
 #
 
 $|=1;
-
+my $TRY_AUTOMODE = $ENV{'SSHLM_AUTO'} || 0;
 my $term = Term::ReadLine->new('sshlm');
 die 'Need Term::ReadLine::Gnu installed' unless $term->ReadLine eq 'Term::ReadLine::Gnu';
 
@@ -40,7 +42,7 @@ $term->parse_and_bind('"\C-c": sshlm-accept-line-immed');
 $term->parse_and_bind('"\C-j": sshlm-accept-line-immed');
 $term->parse_and_bind('"\C-m": sshlm-accept-line-immed');
 $term->MinLine(undef);		# disable autohistory
-$term->addhistory(q{PS1='ssh-lm> '; _S=${0##*/}; _S=${_S#-*} ; echo Setting ssh-lm prompt for shell $_S; [ "$_S" = "zsh" ] && PS1='%m-lm%# '; [ "$_S" = "bash" ] && PS1='\h-lm\$ '; export PS1});	# fake history for easy adding PS1
+$term->addhistory($NEW_PS1) if !$TRY_AUTOMODE;	# fake history for easy adding PS1 (if not in auto-add-prompt mode)
 $term->read_init_file();	# otherwise add_defun() used in .inputrc won't be recognized
 
 sub do_readline {
@@ -87,6 +89,12 @@ MAIN: while ($pty->is_active) {
             undo_readline ($p_len + $term->Attribs->{point}, $p_len + $term->Attribs->{end});
         }
 
+        # should we try and setup own our PS1 automatically on connect?
+        if ($TRY_AUTOMODE and defined $AUTO_PS1_RE and $output =~ /$AUTO_PS1_RE/) {
+            $linemode_active = 2;
+            $TRY_AUTOMODE = 0;		# we must execute only once at startup!
+        }
+        
         $linemode_active = 1 if defined $REMOTE_PS1_RE and $output =~ /$REMOTE_PS1_RE/;
         print $output;
         #print "[output ends a=$linemode_active] ";
@@ -95,6 +103,11 @@ MAIN: while ($pty->is_active) {
     }
     
     my $all_input = '';
+    if ($linemode_active == 2) {	# autodetected any remote prompt, and force our prompt
+        $all_input = $NEW_PS1 . "\n";
+        $linemode_active = 0;
+    }
+    
     READKEY: while (defined (my $input = ReadKey(-1))) {
         if ($input eq $HOTKEY) {	# hotkey activates line-mode
             $linemode_active = ! $linemode_active;
