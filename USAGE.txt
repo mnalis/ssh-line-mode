@@ -37,7 +37,7 @@ REQUIREMENTS:
   It also requires any command-line ssh client of your choice (like openssh-client).
 
 INSTALLATION:
-- "sudo make install"
+- "sudo make install" (or "make deb" to build debian package)
 
 
 BUGS & WORKAROUNDS:

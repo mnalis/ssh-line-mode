@@ -2,11 +2,8 @@
   erased correctly before being re-echoed by remote shell, leading to
   duplicate text.
 
-- make a Debian package on "make deb"
-  - depends on openssh-client (or others?), perl, perl modules (will it autodetect?)
-  + run lintian on it
-  - run piuparts on it
-  - debuild -us -uc umjesto dpkg-buildpackage?
+- autodetect any prompt when first connected, and then override PS1 and
+  setup your own. ALPHA feature (enable with environment variable).
 
 - readline *really* wants its prompt to start at the beginning of the line.
   if it doesn't, sometimes it will move it there overwriting remote prompt

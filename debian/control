@@ -9,7 +9,7 @@ Vcs-browser: https://github.com/mnalis/ssh-line-mode.git
 
 Package: sshlm
 Architecture: all
-Depends: ${shlib:Depends}, ${perl:Depends}, ${misc:Depends}, openssh-client | ssh-client
+Depends: ${misc:Depends}, ${perl:Depends}, libterm-readline-gnu-perl, libio-pty-easy-perl, libterm-readkey-perl, openssh-client | ssh-client
 Description: local line-by-line editing mode for ssh client
  This is wrapper around ssh(1) which allows it to do local line editing
  before sending it to remote host (also known by names such as telnet line mode,

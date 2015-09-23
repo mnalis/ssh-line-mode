@@ -20,7 +20,7 @@ clean:
 	rm -f *~
 
 deb:
-	dpkg-buildpackage -rfakeroot -uc -us
+	debuild -uc -us
 
 mrproper:
 	./debian/rules clean
