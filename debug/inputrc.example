@@ -1,0 +1,5 @@
+$if sshlm
+# this will make <TAB> work on remote files (by dropping to char-by-char mode)
+"\C-i": sshlm-accept-line-immed
+$endif
+
