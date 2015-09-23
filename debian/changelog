@@ -1,3 +1,9 @@
+sshlm (0.2) unstable; urgency=low
+
+  * SSHLM_AUTO=1 automatic prompt change mode functionality added
+
+ -- Matija Nalis <mnalis-debian@voyager.hr>  Wed, 23 Sep 2015 11:51:20 +0200
+
 sshlm (0.1) unstable; urgency=low
 
   * Initial release.
