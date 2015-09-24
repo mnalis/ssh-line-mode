@@ -8,3 +8,12 @@
   functions to erase local echo.
   for example http://stackoverflow.com/questions/15398742/how-can-i-suppress-readline-to-print-something-and-then-restore-it
   http://stackoverflow.com/questions/1512028/gnu-readline-how-to-clear-the-input-line
+  (can be noticed sometimes when using up/down to go through history)
+
+- there is race condition; if the remote sends more text but in two or more
+  parts, and first par matches $REMOTE_PS1_RE, the readline will be started
+  immedeately without waiting for all text. We should probably remember
+  somewhere that we sent more than "\n", and if so, expect more than than
+  $PS1. but it will backfire on programs with no output (/bin/true), so make
+  sure we only add small delay to collect more data, not block for a long
+  time.
