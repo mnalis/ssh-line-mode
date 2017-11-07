@@ -29,4 +29,4 @@ the annoying network lag, this might just be a tool for you.
 sshlm allows you to interactively choose whether to use line-by-line (with
 local line editing) or common char-by-char mode.
 
-See USAGE.txt for instructions.
+See [USAGE.txt](USAGE.txt) for instructions.
