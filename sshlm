@@ -68,6 +68,8 @@ sub undo_readline {
 my $linemode_active = 0;
 my $last_history_added = '';  
 
+print "Use '^]' to toggle line mode.\n";	# FIXME hardcoded help
+
 ReadMode 'ultra-raw';
 
 my $pty = IO::Pty::Easy->new ( raw => 0 );

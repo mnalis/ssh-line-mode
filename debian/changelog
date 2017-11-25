@@ -1,3 +1,10 @@
+sshlm (0.21) unstable; urgency=medium
+
+  * add help on startup
+    https://github.com/mnalis/ssh-line-mode/issues/1
+
+ -- Matija Nalis <mnalis-debian@voyager.hr>  Sat, 25 Nov 2017 19:31:22 +0100
+
 sshlm (0.2) unstable; urgency=low
 
   * SSHLM_AUTO=1 automatic prompt change mode functionality added
