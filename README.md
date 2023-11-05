@@ -13,7 +13,7 @@ networks and such - because you can do all the line editing locally without
 involving network. Only when you press enter is whole line sent at once in
 just one TCP packet (as opposed to dozens of them in char-by-char mode!)
 
-There is MOSH package at https://mosh.mit.edu/ that is supposed to help with
+There is MOSH package at https://mosh.org/ that is supposed to help with
 those issues and more (like auto-reconnect), but it requires installing
 additional programs on remote sides, fixing UTF-8 issues both on remote and
 local sides, and configuring remote firewalls to pass additional traffic (it
