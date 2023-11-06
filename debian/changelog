@@ -1,3 +1,12 @@
+sshlm (0.22) unstable; urgency=medium
+
+  * update docs
+  * spelling corrections
+  * bring debian packaging uptodate
+  * lintian cleanups
+
+ -- Matija Nalis <mnalis-debian@voyager.hr>  Mon, 06 Nov 2023 15:16:41 +0100
+
 sshlm (0.21) unstable; urgency=medium
 
   * add help on startup

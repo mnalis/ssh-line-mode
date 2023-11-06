@@ -22,5 +22,10 @@ clean:
 deb:
 	debuild -uc -us
 
+debcheck: deb
+	lintian -EviIL +pedantic
+
 mrproper:
 	./debian/rules clean
+
+.PHONY: all install uninstall clean deb debcheck mrproper
